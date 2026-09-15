@@ -6,15 +6,15 @@ implement multiple readers or even other plugin contributions. see:
 https://napari.org/stable/plugins/building_a_plugin/guides.html#readers
 """
 import napari.layers
-import numpy as np
 import os
 
 import napari
 from napari.utils.notifications import show_info
 
-from magicgui.widgets import ComboBox, PushButton, Container, Label
+from magicgui.widgets import PushButton, Container, Label
 from qtpy.QtWidgets import QSizePolicy
-from qtpy.QtCore import Qt
+
+from ._my_widgets import CustomComboBox
 
 import brimfile as brim
 
@@ -110,12 +110,18 @@ def create_brim_widget(file: brim.File) -> Container:
     file_name_label.native.setWordWrap(True)
     file_name_label.native.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
     file_name_label.native.updateGeometry()
-    data_combo = ComboBox(label="Data group", name="data_groups", choices=dt_names)
-    analysis_results_combo = ComboBox(label="Analysis results", choices=[])
-    quantity_combo = ComboBox(label="Quantity", choices=[])
-    peak_types_combo = ComboBox(label="Peak type", choices=peak_types_choices)
+
+    data_combo = CustomComboBox(label="Data group", name="data_groups", choices=dt_names)
+
+    analysis_results_combo = CustomComboBox(label="Analysis results", choices=[])
+
+    quantity_combo = CustomComboBox(label="Quantity", choices=[])
+
+    peak_types_combo = CustomComboBox(label="Peak type", choices=peak_types_choices)
+
     add_image_btn = PushButton(text="Add image")
     add_image_btn.native.setFixedHeight(40)
+
     reset_btn = PushButton(text="Reset")
     reset_btn.native.setFixedWidth(120)
 
@@ -136,9 +142,8 @@ def create_brim_widget(file: brim.File) -> Container:
         ar_groups = get_current_data_group().list_AnalysisResults(retrieve_custom_name = True)
         ar_list = [x["custom_name"] for x in ar_groups]
         analysis_results_combo.choices = ar_list
+        # it will trigger the analysis_results_combo changed event, bound to on_analysis_results_change
         analysis_results_combo.value = analysis_results_combo.choices[0] if analysis_results_combo.choices else None
-        # call the analysis_results handler directly to update downstream controls
-        on_analysis_results_change()
     
     def on_analysis_results_change():
         d = get_current_data_group()
@@ -163,9 +168,8 @@ def create_brim_widget(file: brim.File) -> Container:
             quantity_map[disp] = obj
 
         quantity_combo.choices = qts_display
+        # it will trigger the quantity_combo changed event, bound to on_quantity_change
         quantity_combo.value = quantity_combo.choices[0] if quantity_combo.choices else None
-        # call the quantity handler directly
-        on_quantity_change()
 
     def on_quantity_change():
         d = get_current_data_group()
