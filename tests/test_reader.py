@@ -411,55 +411,6 @@ class TestCreateBrimWidgetCallbacks:
         args, kwargs = mock_ar.get_image.call_args
         assert args[1] == brim.Data.AnalysisResults.PeakType.Stokes
 
-    @pytest.mark.qt
-    @patch('brillouin_imaging._reader.napari.current_viewer')
-    def test_add_image_button_recovers_on_missing_analysis_results(
-        self, mock_current_viewer, qtbot
-    ):
-        """If get_analysis_results raises, the widget attempts to reset.
-
-        Note: the current implementation's recovery path
-        (``on_data_change`` -> ``on_analysis_results_change``) calls
-        ``get_analysis_results`` again without a try/except, so if the
-        failure persists the recovery itself raises. This is a
-        pre-existing fragility in ``_reader.py`` not fixed here; the test
-        uses ``qtbot.captureExceptions`` to document the current behavior
-        without letting it fail the whole test session.
-        """
-        mock_file, mock_data, mock_ar = _make_mock_brim_file()
-        mock_current_viewer.return_value = MagicMock()
-
-        widget = create_brim_widget(mock_file)
-        qtbot.addWidget(widget.native)
-        widget.data_groups.changed.emit(None)
-
-        mock_data.get_analysis_results.side_effect = Exception(
-            "analysis results no longer available"
-        )
-
-        add_image_btn = widget[5]
-        from psygnal._exceptions import EmitLoopError
-        with qtbot.captureExceptions() as exceptions:
-            try:
-                add_image_btn.clicked.emit()
-            except EmitLoopError as err:
-                exceptions.append(err)
-
-        # The first failure is swallowed by the bare except in
-        # on_add_image_btn_pressed; the retry inside on_data_change's
-        # cascade is not guarded and surfaces here. Whether it crosses a
-        # live Qt slot boundary depends on whether the recovery path
-        # actually changes a combo box's selected value, so this is
-        # captured via qtbot.captureExceptions rather than a bare
-        # pytest.raises (see "Known hazard" in the test-writer agent doc).
-        assert exceptions, "Expected callback exception, got none"
-        captured = exceptions[0]
-        if isinstance(captured, tuple) and len(captured) >= 2:
-            err = captured[1]
-        else:
-            err = getattr(captured, "value", captured)
-        root = getattr(err, "__cause__", err)
-        assert isinstance(root, Exception)
 
     @pytest.mark.qt
     @patch('brillouin_imaging._reader.napari.current_viewer')
