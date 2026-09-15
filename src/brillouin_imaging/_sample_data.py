@@ -8,6 +8,9 @@ Replace code below according to your needs.
 """
 from __future__ import annotations
 
+import napari
+from qtpy.QtCore import QTimer
+
 from ._reader import reader_function
 
 
@@ -18,8 +21,25 @@ def load_sample_data(url: str):
     # Check the documentation for more information about the
     # add_image_kwargs
     # https://napari.org/stable/api/napari.Viewer.html#napari.Viewer.add_image
+    
+    # display the reader widget to load the sample data
     reader_function(url)
-    return [(None,),]
+
+    # return an invisible points layer as a placeholder for the sample data
+    # so that Napari does not complain about the sample data being empty. 
+    # the created layer is scheduled to be removed once control returns to the event loop.
+    placeholder_name = "_brillouin_sampledata_placeholder"
+    def remove_placeholder():
+        viewer = napari.current_viewer()
+        try:
+            layer = viewer.layers[placeholder_name]
+        except KeyError:
+            return
+        viewer.layers.remove(layer)
+    # schedule the removal of the placeholder layer after the current event loop iteration
+    QTimer.singleShot(0, remove_placeholder)
+    
+    return [([0,0], {"name": placeholder_name, "visible": False}, "points")]
 
 def sample_data_drosophila():    
     url = 'https://livingobjects.ebi.ac.uk/bioimaging-integrator-data/S-BIAD3424/drosophila_LSBM.brim.zarr'
