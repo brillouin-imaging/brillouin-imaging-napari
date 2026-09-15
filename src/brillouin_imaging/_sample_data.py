@@ -22,14 +22,14 @@ def load_sample_data(url: str):
     return [(None,),]
 
 def sample_data_drosophila():    
-    url = 'https://s3.embl.de/brim-example-files/drosophila_LSBM.brim.zarr'
+    url = 'https://livingobjects.ebi.ac.uk/bioimaging-integrator-data/S-BIAD3424/drosophila_LSBM.brim.zarr'
     return load_sample_data(url)
 def sample_data_zfeye():
-    url = 'https://s3.embl.de/brim-example-files/zebrafish_eye_confocal.brim.zarr'
+    url = 'https://livingobjects.ebi.ac.uk/bioimaging-integrator-data/S-BIAD3424/zebrafish_eye_confocal.brim.zarr'
     return load_sample_data(url)
 def sample_data_zfSBS():
-    url = 'https://s3.embl.de/brim-example-files/zebrafish_ECM_SBS.brim.zarr'
+    url = 'https://livingobjects.ebi.ac.uk/bioimaging-integrator-data/S-BIAD3424/zebrafish_ECM_SBS.brim.zarr'
     return load_sample_data(url)
 def sample_data_beadsFTBM():
-    url = 'https://s3.embl.de/brim-example-files/oil_beads_FTBM.brim.zarr'
+    url = 'https://livingobjects.ebi.ac.uk/bioimaging-integrator-data/S-BIAD3424/oil_beads_FTBM.brim.zarr'
     return load_sample_data(url)

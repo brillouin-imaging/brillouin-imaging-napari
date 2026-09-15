@@ -41,36 +41,36 @@ class TestSampleDataFunctions:
 
     @patch('brillouin_imaging._sample_data.load_sample_data')
     def test_sample_data_drosophila(self, mock_load):
-        """Test sample_data_drosophila uses the EMBL URL."""
+        """Test sample_data_drosophila uses the BioImage archive URL."""
         sample_data_drosophila()
 
         mock_load.assert_called_once_with(
-            'https://s3.embl.de/brim-example-files/drosophila_LSBM.brim.zarr'
+            'https://livingobjects.ebi.ac.uk/bioimaging-integrator-data/S-BIAD3424/drosophila_LSBM.brim.zarr'
         )
 
     @patch('brillouin_imaging._sample_data.load_sample_data')
     def test_sample_data_zfeye(self, mock_load):
-        """Test sample_data_zfeye uses the EMBL URL."""
+        """Test sample_data_zfeye uses the BioImage archive URL."""
         sample_data_zfeye()
 
         mock_load.assert_called_once_with(
-            'https://s3.embl.de/brim-example-files/zebrafish_eye_confocal.brim.zarr'
+            'https://livingobjects.ebi.ac.uk/bioimaging-integrator-data/S-BIAD3424/zebrafish_eye_confocal.brim.zarr'
         )
 
     @patch('brillouin_imaging._sample_data.load_sample_data')
     def test_sample_data_zfSBS(self, mock_load):
-        """Test sample_data_zfSBS uses the EMBL URL."""
+        """Test sample_data_zfSBS uses the BioImage archive URL."""
         sample_data_zfSBS()
 
         mock_load.assert_called_once_with(
-            'https://s3.embl.de/brim-example-files/zebrafish_ECM_SBS.brim.zarr'
+            'https://livingobjects.ebi.ac.uk/bioimaging-integrator-data/S-BIAD3424/zebrafish_ECM_SBS.brim.zarr'
         )
 
     @patch('brillouin_imaging._sample_data.load_sample_data')
     def test_sample_data_beadsFTBM(self, mock_load):
-        """Test sample_data_beadsFTBM uses the EMBL URL."""
+        """Test sample_data_beadsFTBM uses the BioImage archive URL."""
         sample_data_beadsFTBM()
 
         mock_load.assert_called_once_with(
-            'https://s3.embl.de/brim-example-files/oil_beads_FTBM.brim.zarr'
+            'https://livingobjects.ebi.ac.uk/bioimaging-integrator-data/S-BIAD3424/oil_beads_FTBM.brim.zarr'
         )
