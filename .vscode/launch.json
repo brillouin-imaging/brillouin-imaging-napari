@@ -10,7 +10,11 @@
             "type": "debugpy",
             "request": "launch",
             "module": "napari",
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "PYTHONASYNCIODEBUG": "1"
+            }
         }
     ]
 }
