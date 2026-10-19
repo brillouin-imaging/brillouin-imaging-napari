@@ -458,7 +458,14 @@ class SpectraTools(Container):
         if file.subtype != brim.subtypes.SubType.SinglePoint_VIPA_v0_1:
             return
         data_group = file.get_data(image_layer.metadata['Data_group'])
-        raw_image, spectral_line, linewidth = single_point_VIPA.get_raw_spectrum_in_image(data_group, coord)
+        analysis_results = None
+        try:
+            analysis_results = data_group.get_analysis_results(image_layer.metadata['Analysis_result'])
+        except Exception:
+            # `analysis_result` remains None in case of error
+            analysis_results = None
+        raw_image, spectral_line, linewidth = single_point_VIPA.get_raw_spectrum_in_image(data_group, coord, 
+                                                                                          analysis_results=analysis_results)
         raw_image = np.asarray(raw_image)
 
         self.ax_vipa_rawdata.clear()
